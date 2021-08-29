@@ -5,8 +5,8 @@ window=Tk()
 window.title("Calculator")
 window.configure(bg="black")
 
-e = Entry(window, borderwidth=4, width=15, fg="white", bg="black", font=("Arial",20))
-e.grid(row=0, column=0, columnspan=4)
+e = Entry(window, borderwidth=10, width=14, fg="white", bg="black", font=("Arial",20))
+e.grid(row=0, column=0, columnspan=4, pady = 1)
 
 flag=0
 
@@ -24,6 +24,12 @@ def click(n):
         txt=e.get()+str(n)
     e.delete(0,END)
     e.insert(0,txt)
+
+
+def power():
+    global first_num
+    first_num = e.get() + "P"
+    e.delete(0,END)
 
 
 def add():
@@ -53,16 +59,35 @@ def div():
 def root():
     num=float(e.get())
     e.delete(0,END)
-    e.insert(0,sqrt(num))
+    if num < 0:
+        e.insert(0,"Error")
+    else:
+        ans = sqrt(num)
+        if(ans - int(ans) == 0):
+            ans = int(ans)
+        e.insert(0, ans)
     
     global flag
     flag=1
 
+def absolute():
+    num = float(e.get())
+    e.delete(0,END)
+    
+    if num<0:
+        num = abs(num)
+    else:
+        num = -num
+    
+    if not num - int(num):
+        num = int(num)
+
+    e.insert(0, num)
 
 def equal():
-    second_num = int(e.get())
+    second_num = float(e.get())
     e.delete(0,END)
-    num=int(first_num[:-1])
+    num=float(first_num[:-1])
 
     if first_num[-1]=="A":
         ans = num + second_num
@@ -79,6 +104,12 @@ def equal():
             ans=int(num/second_num)
         else:
             ans=num/second_num
+
+    elif first_num[-1] == "P":
+        ans = pow(num, second_num)
+
+    if(ans - int(ans) == 0):
+        ans = int(ans)
 
     e.insert(0,ans)
     global flag
@@ -102,8 +133,10 @@ btmult=Button(window,text="*",font=("Arial",20),fg="white",bg="black",width=3,co
 btdiv=Button(window,text="/",font=("Arial",20),fg="white",bg="black",width=3,command=div).grid(row=1,column=3)
 btdot=Button(window,text=".",font=("Arial",20),fg="white",bg="black",width=3,command=lambda:click(".")).grid(row=5,column=0)
 btroot = Button(window, text="√", font=("Arial",20),command=root,fg="white",bg="black",width=3).grid(row=1,column=0)
-btcut=Button(window,text="c",font=("Arial",20),fg="white",bg="black",width=7,command=lambda:click("c") ).grid(row=1,column=1,columnspan=2)
-bteq=Button(window,text="=",font=(" Arial",20),fg="white",bg="black",width=7,command=equal).grid(row=5,column=2,columnspan=2)
+btcut=Button(window,text="c",font=("Arial",20),fg="white",bg="black",width=3,command=lambda:click("c") ).grid(row=1,column=2)
+btpow = Button(window, text = "^", font = ("Arial",20), fg = "white", bg = "black",width = 3, command = power).grid(row = 1, column = 1)
+bteq=Button(window,text="=",font=(" Arial",20),fg="white",bg="black",width=3,command=equal).grid(row=5,column=3)
+btabs = Button(window, text = "+/-", fg = "white", bg = "black", font = ("Arial",20), command = absolute, width = 3).grid(row = 5, column = 2)
 
 
 
